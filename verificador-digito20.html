@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dígito Verificador RUT</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Calculadora de Dígito Verificador RUT</h2>
+        <form id="rutForm">
+            <label for="rut">Ingresa los primeros 8 digitos de tu RUT:</label>
+            <input type="text" id="rut" name="rut" placeholder="Ej: 12345678">
+            <input type="submit" value="Calcular">
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('rutForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var rutInput = document.getElementById('rut').value;
+            var dv = calcularDV(rutInput);
+            document.getElementById('result').innerText = 'Dígito Verificador: ' + dv;
+        });
+
+        function calcularDV(rut) {
+            var suma = 0;
+            var multiplo = 2;
+            var dv;
+
+            rut = rut.replace(/\./g, '');
+            rut = rut.replace(/\-/g, '');
+
+            for (var i = rut.length - 1; i >= 0; i--) {
+                suma += parseInt(rut.charAt(i)) * multiplo;
+                multiplo = multiplo < 7 ? multiplo + 1 : 2;
+            }
+
+            dv = 11 - (suma % 11);
+            if (dv === 11) {
+                dv = 0;
+            } else if (dv === 10) {
+                dv = 'K';
+            }
+
+            return dv;
+        }
+    </script>
+</body>
+</html>
